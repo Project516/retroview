@@ -9,4 +9,4 @@ pluginManagement {
     }
 }
 
-rootProject.name = 'minecraft-shader-template'
+rootProject.name = 'cool-shader'
