@@ -8,6 +8,8 @@ uniform sampler2D colortex2;
 uniform sampler2D depthtex0;
 
 uniform sampler2D shadowtex0;
+uniform sampler2D shadowtex1;
+uniform sampler2D shadowcolor0;
 
 /*
 const int colortex0Format = RGB16;
@@ -34,6 +36,23 @@ vec3 projectAndDivide(mat4 projectionMatrix, vec3 position) {
 	return homPos.xyz / homPos.w;
 }
 
+vec3 getShadow(vec3 shadowScreenPos) {
+	float transparentShadow = step(shadowScreenPos.z, texture(shadowtex0, shadowScreenPos.xy).r);
+
+	if (transparentShadow == 1.0) {
+		return vec3(1.0);
+	}
+
+	float opaqueShadow = step(shadowScreenPos.z, texture(shadowtex1, shadowScreenPos.zy).r);
+
+	if (opaqueShadow == 0.0) {
+		return vec3(0.0);
+	}
+
+	vec4 shadowColor = texture(shadowcolor0, shadowScreenPos.xy);
+	return shadowColor.rgb * (1.0 - shadowColor.a);
+}
+
 void main() {
 	vec2 lightmap = texture(colortex1, texcoord).xy;
 	vec3 encodedNormal = texture(colortex2, texcoord).rgb;
@@ -55,10 +74,11 @@ void main() {
 	vec3 shadowViewPos = (shadowModelView * vec4(feetPlayerPos, 1.0)).xyz;
 	vec4 shadowClipPos = shadowProjection * vec4(shadowViewPos, 1.0);
 	shadowClipPos.z -= 0.001;
+	shadowClipPos.xyz = distortShadowClipPos(shadowClipPos.xyz);
 	vec3 shadowNdcPos = shadowClipPos.xyz / shadowClipPos.w;
 	vec3 shadowScreenPos = shadowNdcPos * 0.5 + 0.5;
 
-	float shadow = step(shadowScreenPos.z, texture(shadowtex0, shadowScreenPos.xy).r);
+	vec3 shadow = getShadow(shadowScreenPos);
 
 	vec3 blocklight = lightmap.x * blocklightColor;
 	vec3 skylight = lightmap.y * skylightColor;
