@@ -1,3 +1,12 @@
+# Cool Shader
+
+## TODO
+
+* [ ] Fix transparent entities
+
+
+--- 
+
 Welcome! This is a template for developing a 1.21.5 Minecraft shader with Iris. All shader files are in the `shaders` folder. They currently don't do anything special.
 
 From the terminal, you can run:
