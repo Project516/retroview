@@ -1,8 +1,6 @@
 # Cool Shader
 
-## TODO
-
-* [ ] Fix transparent entities
+Goal: Make this a retro shader pack
 
 
 --- 
