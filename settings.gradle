@@ -9,4 +9,4 @@ pluginManagement {
     }
 }
 
-rootProject.name = 'cool-shader'
+rootProject.name = 'retroview'
