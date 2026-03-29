@@ -122,6 +122,9 @@ void main() {
 	float v = smoothstep(retroVignetteInner, retroVignetteOuter, d);
 	color.rgb *= 1.0 - retroVignetteStrength * v;
 
+	vec3 bleed = texture(colortex0, lowUV + vec2(0.001, 0.0)).rgb * 0.1;
+	color.rgb += bleed * 0.5;
+
 	color.rgb = clamp(color.rgb, 0.0, 1.0);
 
 }
