@@ -6,7 +6,7 @@ A simple, lightweight, retro-style shader pack for Minecraft!
 
 ## What does it add?
 
-retroview instantly transforms your Minecraft world with a classic retro screen look — giving everything that retro, pixelated console feel. It’s pure visual nostalgia layered right on top of vanilla (or your favorite resource packs). No new blocks, no new mechanics — just a charming retro filter that makes every world feel fresh and different.
+retroview instantly transforms your Minecraft world with a classic retro screen look — giving everything that retro, pixelated, console feel. It’s pure visual nostalgia layered right on top of vanilla (or your favorite resource packs). No new blocks, no new mechanics — just a charming retro filter that makes every world feel fresh and different.
 
 ## Key Features
 
