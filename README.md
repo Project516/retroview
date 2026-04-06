@@ -6,14 +6,14 @@ A simple, lightweight, retro-style shader pack for Minecraft!
 
 ## What does it add?
 
-retroview instantly transforms your Minecraft world with a classic retro screen look — giving everything that retro, pixelated, console feel. It’s pure visual nostalgia layered right on top of vanilla (or your favorite resource packs). No new blocks, no new mechanics — just a charming retro filter that makes every world feel fresh and different.
+retroview instantly transforms your Minecraft world with a classic retro screen look, giving everything that retro, pixelated, console feel. It’s pure visual nostalgia layered right on top of vanilla (or your favorite resource packs). No new blocks, no new mechanics. Just a charming retro filter that makes every world feel fresh and different.
 
 ## Key Features
 
-* Extremely lightweight — runs smoothly even on lower-end PCs
+* Extremely lightweight: Runs smoothly even on lower-end PCs
 * Easy installation through Iris
 * Works perfectly with vanilla Minecraft and most resource packs
-* Currently supports Minecraft 1.21.5
+* Currently supports Minecraft 1.21.5, 26.1, and 26.1.1
 
 ## Why would you want this?
 
@@ -30,5 +30,5 @@ Created as a simple passion project to bring retro vibes back to modern Minecraf
 
 ## Compatibility
 
-* Minecraft 1.21.5
+* Minecraft 1.21.5, 26.1, or 26.1.1
 * Requires the Iris shader mod
