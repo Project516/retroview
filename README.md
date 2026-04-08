@@ -1,5 +1,8 @@
 # retroview
 
+[![Modrinth](https://img.shields.io/modrinth/dt/retroview?color=00AF5C&label=downloads&logo=modrinth)](https://modrinth.com/shader/retroview)
+[![CurseForge](https://cf.way2muchnoise.eu/full_retroview_downloads.svg)](https://curseforge.com/minecraft/shaders/retroview)
+
 ![retroview shader](https://raw.githubusercontent.com/Project516/retroview/refs/heads/master/assets/screenshot.png)
 
 A simple, lightweight, retro-style shader pack for Minecraft!
