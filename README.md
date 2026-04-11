@@ -34,6 +34,7 @@ Created as a simple passion project to bring retro vibes back to modern Minecraf
 ## Compatibility
 
 * Requires the Iris shader mod
+* Tested on Minecraft 1.16.5 - 26.2.1
 
 ## Download
 
