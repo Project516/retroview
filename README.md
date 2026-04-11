@@ -35,3 +35,7 @@ Created as a simple passion project to bring retro vibes back to modern Minecraf
 
 * Minecraft 1.21.5, 26.1, or 26.1.1
 * Requires the Iris shader mod
+
+## Download
+
+retroview is available to download on [Modrinth](https://modrinth.com/shader/retroview) and [Curseforge](https://curseforge.com/minecraft/shaders/retroview).
