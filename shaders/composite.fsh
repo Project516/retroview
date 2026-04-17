@@ -57,7 +57,7 @@ vec3 getShadow(vec3 shadowScreenPos) {
 		return vec3(1.0);
 	}
 
-	float opaqueShadow = step(shadowScreenPos.z, texture(shadowtex1, shadowScreenPos.zy).r);
+	float opaqueShadow = step(shadowScreenPos.z, texture(shadowtex1, shadowScreenPos.xy).r);
 
 	if (opaqueShadow == 0.0) {
 		return vec3(0.0);
