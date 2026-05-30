@@ -39,3 +39,5 @@ Created as a simple passion project to bring retro vibes back to modern Minecraf
 ## Download
 
 retroview is available to download on [Modrinth](https://modrinth.com/shader/retroview) and [Curseforge](https://curseforge.com/minecraft/shaders/retroview).
+
+#### Made by [project516](https://project516.dev)

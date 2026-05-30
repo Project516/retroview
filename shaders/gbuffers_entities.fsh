@@ -17,12 +17,12 @@ layout(location = 1) out vec4 lightLevelData;
 layout(location = 2) out vec4 encodedNormal;
 
 void main() {
-	color = texture(gtexture, texcoord) * glcolor;
-	color.rgb = mix(color.rgb, entityColor.rgb, entityColor.a);
-	color *= texture(lightmap, lmcoord);
-	lightLevelData = vec4(lmcoord, 0.0, 1.0);
-	encodedNormal = vec4(normal * 0.5 + 0.5, 1.0);
-	if (color.a < alphaTestRef) {
-		discard;
-	}
+    color = texture(gtexture, texcoord) * glcolor;
+    color.rgb = mix(color.rgb, entityColor.rgb, entityColor.a);
+    color.rgb *= texture(lightmap, lmcoord).rgb;
+    lightLevelData = vec4(lmcoord, 0.0, 1.0);
+    encodedNormal = vec4(normal * 0.5 + 0.5, 1.0);
+    if (color.a < alphaTestRef) {
+        discard;
+    }
 }
