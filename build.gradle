@@ -105,6 +105,11 @@ tasks.register('syncShaderpackMetadata', Sync) {
     description = 'Copies non-shaderpack-source metadata into the development run directory.'
     into(shaderpackRunDir)
     with(shaderpackStaticIncludes)
+
+    // don't let Sync delete through the shaders symlink
+    preserve {
+        include 'shaders/**'
+    }
 }
 
 tasks.register('linkShaderpackShaders') {
