@@ -68,25 +68,26 @@ vec3 getShadow(vec3 shadowScreenPos) {
 }
 
 void main() {
-    vec2 lightmap = texture(colortex1, texcoord).xy;
-    vec3 encodedNormal = texture(colortex2, texcoord).rgb;
+    vec2 screenSize = vec2(textureSize(colortex0, 0));
+    vec2 lowUV = floor(texcoord * screenSize / retroPixelScale) * retroPixelScale / screenSize;
+
+    vec2 lightmap = texture(colortex1, lowUV).xy;
+    vec3 encodedNormal = texture(colortex2, lowUV).rgb;
     vec3 normal = normalize((encodedNormal - 0.5) * 2.0);
     vec3 lightVector = normalize(shadowLightPosition);
     vec3 worldLightVector = mat3(gbufferModelViewInverse) * lightVector;
 
-    vec2 screenSize = vec2(textureSize(colortex0, 0));
-    vec2 lowUV = floor(texcoord * screenSize / retroPixelScale) * retroPixelScale / screenSize;
     color = texture(colortex0, lowUV);
     color.rgb = pow(color.rgb, vec3(2.2));
 
-    float depth = texture(depthtex0, texcoord).r;
+    float depth = texture(depthtex0, lowUV).r;
     if (depth == 1.0) {
         return;
     }
 
-    float depth2 = texture(depthtex2, texcoord).r;
+    float depth2 = texture(depthtex2, lowUV).r;
     if (depth >= depth2) {
-        vec3 ndcPos = vec3(texcoord.xy, depth) * 2.0 - 1.0;
+        vec3 ndcPos = vec3(lowUV.xy, depth) * 2.0 - 1.0;
         vec3 viewPos = projectAndDivide(gbufferProjectionInverse, ndcPos);
         vec3 feetPlayerPos = (gbufferModelViewInverse * vec4(viewPos, 1.0)).xyz;
         vec3 shadowViewPos = (shadowModelView * vec4(feetPlayerPos, 1.0)).xyz;
