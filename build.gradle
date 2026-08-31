@@ -6,21 +6,10 @@
 import java.nio.file.Files
 import java.nio.file.LinkOption
 
-buildscript {
-    repositories {
-        maven {
-            name = 'Fabric'
-            url = 'https://maven.fabricmc.net/'
-        }
-        mavenCentral()
-    }
-    dependencies {
-        classpath "net.fabricmc:fabric-loom:${loom_version}"
-    }
+plugins {
+    id "net.fabricmc.fabric-loom" version "${loom_version}"
+    id "maven-publish"
 }
-
-apply plugin: 'fabric-loom'
-apply plugin: 'maven-publish'
 
 version = project.mod_version
 group = project.maven_group
@@ -45,12 +34,11 @@ repositories {
 
 dependencies {
     minecraft "com.mojang:minecraft:${minecraft_version}"
-    mappings "net.fabricmc:yarn:${yarn_mappings}:v2"
-    modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
-    modRuntimeOnly "net.fabricmc.fabric-api:fabric-api:${fabric_api_version}"
+    implementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
+    runtimeOnly "net.fabricmc.fabric-api:fabric-api:${fabric_api_version}"
 
-    modRuntimeOnly "maven.modrinth:sodium:${sodium_version}"
-    modRuntimeOnly "maven.modrinth:iris:${iris_version}"
+    runtimeOnly "maven.modrinth:sodium:${sodium_version}"
+    runtimeOnly "maven.modrinth:iris:${iris_version}"
 
     runtimeOnly "org.anarres:jcpp:${jcpp_version}"
     runtimeOnly "io.github.douira:glsl-transformer:${glsl_transformer_version}"
@@ -59,14 +47,14 @@ dependencies {
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
+        languageVersion = JavaLanguageVersion.of(25)
     }
 
     withSourcesJar()
 }
 
 tasks.withType(JavaCompile).configureEach {
-    options.release = 21
+    options.release = 25
 }
 
 def shaderpackDevName = "${archives_name}-dev"
@@ -75,7 +63,6 @@ def shaderpackRunDir = layout.projectDirectory.dir("run/shaderpacks/${shaderpack
 def linkedShaderSourceDir = shaderpackRunDir.dir('shaders')
 def shaderpackMetadataFiles = fileTree(projectDir) {
     include 'shaders.properties'
-    include 'pack.mcmeta'
     include 'lang/**'
     include 'LICENSE*'
 }
@@ -84,7 +71,6 @@ def shaderpackIncludes = copySpec {
     from(projectDir) {
         include 'shaders/**'
         include 'shaders.properties'
-        include 'pack.mcmeta'
         include 'lang/**'
         include 'LICENSE*'
     }
@@ -92,7 +78,6 @@ def shaderpackIncludes = copySpec {
 def shaderpackStaticIncludes = copySpec {
     from(projectDir) {
         include 'shaders.properties'
-        include 'pack.mcmeta'
         include 'lang/**'
         include 'LICENSE*'
     }
@@ -120,6 +105,11 @@ tasks.register('syncShaderpackMetadata', Sync) {
     description = 'Copies non-shaderpack-source metadata into the development run directory.'
     into(shaderpackRunDir)
     with(shaderpackStaticIncludes)
+
+    // don't let Sync delete through the shaders symlink
+    preserve {
+        include 'shaders/**'
+    }
 }
 
 tasks.register('linkShaderpackShaders') {

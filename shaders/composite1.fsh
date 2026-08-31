@@ -6,6 +6,7 @@ uniform sampler2D depthtex0;
 uniform mat4 gbufferProjectionInverse;
 uniform vec3 fogColor;
 uniform float far;
+uniform float retroPixelScale = 5.0;
 
 in vec2 texcoord;
 
@@ -20,14 +21,17 @@ vec3 projectAndDivide(mat4 projectionMatrix, vec3 position) {
 layout(location = 0) out vec4 color;
 
 void main() {
+    vec2 screenSize = vec2(textureSize(colortex0, 0));
+    vec2 lowUV = floor(texcoord * screenSize / retroPixelScale) * retroPixelScale / screenSize;
+
     color = texture(colortex0, texcoord);
 
-    float depth = texture(depthtex0, texcoord).r;
+    float depth = texture(depthtex0, lowUV).r;
     if (depth == 1.0) {
         return;
     }
 
-    vec3 ndcPos = vec3(texcoord.xy, depth) * 2.0 - 1.0;
+    vec3 ndcPos = vec3(lowUV.xy, depth) * 2.0 - 1.0;
     vec3 viewPos = projectAndDivide(gbufferProjectionInverse, ndcPos);
 
     float dist = length(viewPos) / far;
