@@ -65,6 +65,7 @@ def shaderpackMetadataFiles = fileTree(projectDir) {
     include 'shaders.properties'
     include 'lang/**'
     include 'LICENSE*'
+    include 'README.md'
 }
 def isWindows = System.getProperty('os.name').toLowerCase().contains('windows')
 def shaderpackIncludes = copySpec {
@@ -73,6 +74,7 @@ def shaderpackIncludes = copySpec {
         include 'shaders.properties'
         include 'lang/**'
         include 'LICENSE*'
+        include 'README.md'
     }
 }
 def shaderpackStaticIncludes = copySpec {
@@ -80,6 +82,7 @@ def shaderpackStaticIncludes = copySpec {
         include 'shaders.properties'
         include 'lang/**'
         include 'LICENSE*'
+        include 'README.md'
     }
 }
 
