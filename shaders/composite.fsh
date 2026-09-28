@@ -17,6 +17,8 @@ const int colortex0Format = RGB16;
 */
 
 uniform vec3 shadowLightPosition;
+uniform vec3 sunPosition;
+uniform vec3 moonPosition;
 uniform mat4 gbufferModelViewInverse;
 uniform mat4 gbufferProjectionInverse;
 uniform mat4 shadowModelView;
@@ -33,6 +35,9 @@ uniform float retroPixelScale = 5.0;
 const vec3 blocklightColor = vec3(1.0, 0.5, 0.08);
 const vec3 skylightColor = vec3(0.05, 0.15, 0.3);
 const vec3 sunlightColor = vec3(1.0);
+const vec3 moonlightColor = vec3(0.35, 0.45, 0.75);
+const float moonlightStrength = 0.05;
+const float nightBrightness = 0.15;
 const vec3 ambientColor = vec3(0.1);
 
 in vec2 texcoord;
@@ -77,6 +82,14 @@ void main() {
     vec3 lightVector = normalize(shadowLightPosition);
     vec3 worldLightVector = mat3(gbufferModelViewInverse) * lightVector;
 
+    // Iris aims the shadow light at the moon once the sun is down, and the sky
+    // lightmap stays lit overnight, so both have to be dimmed by hand to keep
+    // night as dark as vanilla.
+    float sunUp = smoothstep(-0.15, 0.15, normalize(sunPosition).y);
+    float moonUp = smoothstep(-0.15, 0.15, normalize(moonPosition).y);
+    float skyBrightness = mix(nightBrightness, 1.0, sunUp);
+    vec3 directLight = mix(moonlightColor * moonlightStrength * moonUp, sunlightColor, sunUp);
+
     color = texture(colortex0, lowUV);
     color.rgb = pow(color.rgb, vec3(2.2));
 
@@ -100,11 +113,11 @@ void main() {
         vec3 shadow = getShadow(shadowScreenPos);
 
         vec3 blocklight = lightmap.x * blocklightColor;
-        vec3 skylight = lightmap.y * skylightColor;
-        vec3 ambient = ambientColor;
-        vec3 sunlight = sunlightColor * clamp(dot(worldLightVector, normal), 0.0, 1.0) * shadow;
+        vec3 skylight = lightmap.y * skylightColor * skyBrightness;
+        vec3 ambient = ambientColor * skyBrightness;
+        vec3 direct = directLight * clamp(dot(worldLightVector, normal), 0.0, 1.0) * shadow;
 
-        color.rgb *= blocklight + skylight + ambient + sunlight;
+        color.rgb *= blocklight + skylight + ambient + direct;
     }
 
     vec3 srgb = pow(clamp(color.rgb, 0.0, 1.0), vec3(1.0 / 2.2));
