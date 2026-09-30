@@ -85,8 +85,14 @@ void main() {
     // Iris aims the shadow light at the moon once the sun is down, and the sky
     // lightmap stays lit overnight, so both have to be dimmed by hand to keep
     // night as dark as vanilla.
-    float sunUp = smoothstep(-0.15, 0.15, normalize(sunPosition).y);
-    float moonUp = smoothstep(-0.15, 0.15, normalize(moonPosition).y);
+    //
+    // sunPosition and moonPosition arrive in view space, so their .y tracks the
+    // camera rather than the horizon. Undo the view rotation to get the real
+    // elevation, otherwise the whole world brightens and darkens as you turn.
+    vec3 sunDirection = normalize(mat3(gbufferModelViewInverse) * sunPosition);
+    vec3 moonDirection = normalize(mat3(gbufferModelViewInverse) * moonPosition);
+    float sunUp = smoothstep(-0.15, 0.15, sunDirection.y);
+    float moonUp = smoothstep(-0.15, 0.15, moonDirection.y);
     float skyBrightness = mix(nightBrightness, 1.0, sunUp);
     vec3 directLight = mix(moonlightColor * moonlightStrength * moonUp, sunlightColor, sunUp);
 
