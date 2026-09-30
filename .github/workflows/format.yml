@@ -21,4 +21,4 @@ jobs:
       run: sudo apt-get install -y clang-format-18
 
     - name: Check formatting
-      run: ./format.sh --dry-run --Werror
+      run: ./format.sh --check
