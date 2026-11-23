@@ -23,6 +23,7 @@ uniform mat4 gbufferModelViewInverse;
 uniform mat4 gbufferProjectionInverse;
 uniform mat4 shadowModelView;
 uniform mat4 shadowProjection;
+uniform bool hasSkylight;
 
 uniform float retroLevels = 31.0;
 uniform float retroDitherStrength = 1.0;
@@ -38,6 +39,7 @@ const vec3 sunlightColor = vec3(1.0);
 const vec3 moonlightColor = vec3(0.35, 0.45, 0.75);
 const float moonlightStrength = 0.05;
 const float nightBrightness = 0.15;
+const float caveBrightness = 0.05;
 const vec3 ambientColor = vec3(0.1);
 
 in vec2 texcoord;
@@ -76,7 +78,9 @@ void main() {
     vec2 screenSize = vec2(textureSize(colortex0, 0));
     vec2 lowUV = floor(texcoord * screenSize / retroPixelScale) * retroPixelScale / screenSize;
 
-    vec2 lightmap = texture(colortex1, lowUV).xy;
+    // Light level L arrives as (L + 0.5) / 16. Remap so level 0 is 0, or
+    // unlit caves keep a floor of light.
+    vec2 lightmap = clamp((texture(colortex1, lowUV).xy * 16.0 - 0.5) / 15.0, 0.0, 1.0);
     vec3 encodedNormal = texture(colortex2, lowUV).rgb;
     vec3 normal = normalize((encodedNormal - 0.5) * 2.0);
     vec3 lightVector = normalize(shadowLightPosition);
@@ -104,6 +108,9 @@ void main() {
         return;
     }
 
+    // Bleed before lighting so dark areas stay dark.
+    color.rgb += texture(colortex0, lowUV + vec2(0.001, 0.0)).rgb * 0.05;
+
     float depth2 = texture(depthtex2, lowUV).r;
     if (depth >= depth2) {
         vec3 ndcPos = vec3(lowUV.xy, depth) * 2.0 - 1.0;
@@ -120,8 +127,12 @@ void main() {
 
         vec3 blocklight = lightmap.x * blocklightColor;
         vec3 skylight = lightmap.y * skylightColor * skyBrightness;
-        vec3 ambient = ambientColor * skyBrightness;
-        vec3 direct = directLight * clamp(dot(worldLightVector, normal), 0.0, 1.0) * shadow;
+        // The sky lightmap is 0 underground. Scaling by it keeps caves dark,
+        // even where the shadow map misses the terrain overhead. The Nether and
+        // End have no sky light, so they skip it.
+        float skyAccess = hasSkylight ? lightmap.y : 1.0;
+        vec3 ambient = ambientColor * mix(caveBrightness, skyBrightness, skyAccess);
+        vec3 direct = directLight * clamp(dot(worldLightVector, normal), 0.0, 1.0) * shadow * skyAccess;
 
         color.rgb *= blocklight + skylight + ambient + direct;
     }
@@ -144,9 +155,6 @@ void main() {
     float d = distance(texcoord, vec2(0.5));
     float v = smoothstep(retroVignetteInner, retroVignetteOuter, d);
     color.rgb *= 1.0 - retroVignetteStrength * v;
-
-    vec3 bleed = texture(colortex0, lowUV + vec2(0.001, 0.0)).rgb * 0.1;
-    color.rgb += bleed * 0.5;
 
     color.rgb = clamp(color.rgb, 0.0, 1.0);
 }
