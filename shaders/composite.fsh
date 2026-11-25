@@ -25,7 +25,7 @@ uniform mat4 shadowModelView;
 uniform mat4 shadowProjection;
 uniform bool hasSkylight;
 
-uniform float retroPixelScale = 5.0;
+const float retroPixelScale = 5.0;
 
 const vec3 blocklightColor = vec3(1.0, 0.5, 0.08);
 const vec3 skylightColor = vec3(0.05, 0.15, 0.3);
