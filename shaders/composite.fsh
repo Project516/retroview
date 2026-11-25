@@ -69,7 +69,10 @@ void main() {
 
     // Light level L arrives as (L + 0.5) / 16. Remap so level 0 is 0, or
     // unlit caves keep a floor of light.
-    vec2 lightmap = clamp((texture(colortex1, lowUV).xy * 16.0 - 0.5) / 15.0, 0.0, 1.0);
+    vec4 lightData = texture(colortex1, lowUV);
+    vec2 lightmap = clamp((lightData.xy * 16.0 - 0.5) / 15.0, 0.0, 1.0);
+    // Blue is 0 for lit geometry, 0.5 for glowing eyes and 1 where nothing wrote it.
+    bool emissive = abs(lightData.z - 0.5) < 0.25;
     vec3 encodedNormal = texture(colortex2, lowUV).rgb;
     vec3 normal = normalize((encodedNormal - 0.5) * 2.0);
     vec3 lightVector = normalize(shadowLightPosition);
@@ -101,7 +104,7 @@ void main() {
     color.rgb += texture(colortex0, lowUV + vec2(0.001, 0.0)).rgb * 0.05;
 
     float depth2 = texture(depthtex2, lowUV).r;
-    if (depth >= depth2) {
+    if (depth >= depth2 && !emissive) {
         vec3 ndcPos = vec3(lowUV.xy, depth) * 2.0 - 1.0;
         vec3 viewPos = projectAndDivide(gbufferProjectionInverse, ndcPos);
         vec3 feetPlayerPos = (gbufferModelViewInverse * vec4(viewPos, 1.0)).xyz;
