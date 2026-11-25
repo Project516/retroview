@@ -1,6 +1,5 @@
 #version 330 compatibility
 
-uniform sampler2D lightmap;
 uniform sampler2D gtexture;
 
 uniform float alphaTestRef = 0.1;
@@ -15,9 +14,9 @@ layout(location = 0) out vec4 color;
 layout(location = 1) out vec4 lightLevelData;
 layout(location = 2) out vec4 encodedNormal;
 
+// Composite lights these from lightLevelData, so the vanilla lightmap is not applied here.
 void main() {
     color = texture(gtexture, texcoord) * glcolor;
-    color *= texture(lightmap, lmcoord);
     if (color.a < alphaTestRef) {
         discard;
     }
