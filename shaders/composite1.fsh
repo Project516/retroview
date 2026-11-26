@@ -7,13 +7,13 @@ uniform mat4 gbufferProjectionInverse;
 uniform vec3 fogColor;
 uniform float far;
 
-uniform float retroLevels = 31.0;
-uniform float retroDitherStrength = 1.0;
-uniform float retroScanStrength = 0.08;
-uniform float retroVignetteStrength = 0.25;
-uniform float retroVignetteInner = 0.35;
-uniform float retroVignetteOuter = 0.90;
-uniform float retroPixelScale = 5.0;
+const float retroLevels = 31.0;
+const float retroDitherStrength = 1.0;
+const float retroScanStrength = 0.08;
+const float retroVignetteStrength = 0.25;
+const float retroVignetteInner = 0.35;
+const float retroVignetteOuter = 0.90;
+const float retroPixelScale = 5.0;
 
 in vec2 texcoord;
 

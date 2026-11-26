@@ -62,7 +62,6 @@ def shaderSourceDir = layout.projectDirectory.dir('shaders')
 def shaderpackRunDir = layout.projectDirectory.dir("run/shaderpacks/${shaderpackDevName}")
 def linkedShaderSourceDir = shaderpackRunDir.dir('shaders')
 def shaderpackMetadataFiles = fileTree(projectDir) {
-    include 'shaders.properties'
     include 'lang/**'
     include 'LICENSE*'
     include 'README.md'
@@ -71,7 +70,6 @@ def isWindows = System.getProperty('os.name').toLowerCase().contains('windows')
 def shaderpackIncludes = copySpec {
     from(projectDir) {
         include 'shaders/**'
-        include 'shaders.properties'
         include 'lang/**'
         include 'LICENSE*'
         include 'README.md'
@@ -79,7 +77,6 @@ def shaderpackIncludes = copySpec {
 }
 def shaderpackStaticIncludes = copySpec {
     from(projectDir) {
-        include 'shaders.properties'
         include 'lang/**'
         include 'LICENSE*'
         include 'README.md'
