@@ -58,7 +58,8 @@ vec3 getShadow(vec3 shadowScreenPos) {
     }
 
     vec4 shadowColor = texture(shadowcolor0, shadowScreenPos.xy);
-    return shadowColor.rgb * (1.0 - shadowColor.a);
+    // Tint light through water and glass instead of mostly blocking it.
+    return mix(vec3(1.0), shadowColor.rgb, shadowColor.a);
 }
 
 void main() {
